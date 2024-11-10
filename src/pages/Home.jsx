@@ -13,7 +13,7 @@ function Home() {
       </p>
       <div className="flex gap-6 flex-col sm:flex-row">
         <Link to="/create-item">
-          <button className="bg-white text-green-600 font-bold p-4 rounded-lg shadow-md transform hover:scale-105 transition ease-in-out duration-300">
+          <button className="bg-white text-green-600 font-bold p-2 sm:p-4 rounded-lg shadow-md transform hover:scale-105 transition ease-in-out duration-300">
             <span className="flex flex-col sm:flex-row justify-center items-center">
               <CirclePlus className="mr-2" />
               Add New Item
@@ -21,7 +21,7 @@ function Home() {
           </button>
         </Link>
         <Link to="/add-items">
-          <button className="bg-white text-green-600 font-bold p-4 rounded-lg shadow-md transform hover:scale-105 transition ease-in-out duration-300">
+          <button className="bg-white text-green-600 font-bold p-2 sm:p-4 rounded-lg shadow-md transform hover:scale-105 transition ease-in-out duration-300">
             <span className="flex flex-col sm:flex-row justify-center items-center">
               <ShoppingCart className="mr-2" />
               Add Items to Cart

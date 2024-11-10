@@ -1,0 +1,15 @@
+.animate-fly-to-cart {
+    animation: fly-to-cart 0.3s ease-in-out backwards;
+  }
+  
+  @keyframes fly-to-cart {
+    0% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(0, 0) scale(0.1);
+    }
+  }
+  

@@ -70,6 +70,8 @@ const CreateItem = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    // Validate the form fields
     if (
       !formData.name ||
       !formData.measureUnit ||
@@ -111,12 +113,23 @@ const CreateItem = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }, {
+        },
+        {
           withCredentials: true,
         }
       );
+
       if (response.data.status === 201) {
         toast.success(response.data.message);
+
+        // Clear the form data after successful submission
+        setFormData({
+          name: "",
+          measureUnit: "",
+          category: "",
+          file: null,
+          customCategory: "",
+        });
       } else {
         toast.error(response.data.message);
       }
@@ -265,7 +278,11 @@ const CreateItem = () => {
                   type="button"
                   disabled={loading}
                   onClick={handleFileDelete}
-                  className={cn(`absolute top-2 right-2 p-2 ${loading ? 'bg-gray-500' : 'bg-red-500'} text-white rounded-full text-xs`)}
+                  className={cn(
+                    `absolute top-2 right-2 p-2 ${
+                      loading ? "bg-gray-500" : "bg-red-500"
+                    } text-white rounded-full text-xs`
+                  )}
                 >
                   <Trash2 className="w-8 h-8" />
                 </button>

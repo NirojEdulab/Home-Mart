@@ -1,24 +1,13 @@
-// src/components/SearchBar.js
-import { useState } from 'react';
-
-function SearchItem() {
-  const [query, setQuery] = useState('');
-
-  const handleSearch = (e) => {
-    setQuery(e.target.value);
-    // Add search functionality
-  };
-
+/* eslint-disable react/prop-types */
+function SearchItem({ searchQuery, setSearchQuery }) {
   return (
-    <div className="w-full p-2">
-      <input
-        type="text"
-        value={query}
-        onChange={handleSearch}
-        className="w-full p-3 border rounded-lg"
-        placeholder="Search for items..."
-      />
-    </div>
+    <input
+      type="text"
+      placeholder="Search items..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      className="p-2 border rounded w-full"
+    />
   );
 }
 

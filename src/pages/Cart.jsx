@@ -18,7 +18,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
-const serverURL = import.meta.env.VITE_SERVER_URL;
 
 function Cart({ addedItems, setAddedItems }) {
   // Add state for month selection
@@ -107,6 +106,12 @@ function Cart({ addedItems, setAddedItems }) {
     }));
   };
 
+  const getCompressedImageUrl = (imageUrl) => {
+    const baseUrl = imageUrl?.split("upload/")[0];
+    const imagePath = imageUrl?.split("upload/")[1];
+    return `${baseUrl}upload/w_500,f_auto/${imagePath}`;
+  };
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <div className="flex justify-between items-center gap-2 p-3 mb-4 bg-green-500 rounded-md">
@@ -156,8 +161,8 @@ function Cart({ addedItems, setAddedItems }) {
                 <img
                   src={
                     imageError[item.id]
-                      ? "https://via.placeholder.com/150" // Default placeholder image
-                      : `${serverURL}/public/${item.imageUrl}`
+                      ? "/images/noImage.png" // Default placeholder image
+                      : `${getCompressedImageUrl(item.imageUrl)}`
                   }
                   alt={item.name}
                   onError={() => handleImageError(item.id)} // Trigger the error handler

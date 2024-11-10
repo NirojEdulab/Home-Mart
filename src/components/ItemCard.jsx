@@ -1,9 +1,8 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
-import { PlusIcon, MinusIcon } from "lucide-react";
-const serverURL = import.meta.env.VITE_SERVER_URL;
+import { PlusIcon, MinusIcon, XIcon } from "lucide-react";  // Added XIcon for delete button
 
-function ItemCard({ item, onAddItem }) {
+function ItemCard({ item, onAddItem, onDeleteItem }) {
   const [quantity, setQuantity] = useState(1);
   const [imageError, setImageError] = useState(false);
 
@@ -23,13 +22,27 @@ function ItemCard({ item, onAddItem }) {
     setImageError(true); // Set the imageError state to true if the image fails to load
   };
 
+  const getCompressedImageUrl = (imageUrl) => {
+    const baseUrl = imageUrl?.split("upload/")[0];
+    const imagePath = imageUrl?.split("upload/")[1];
+    return `${baseUrl}upload/w_500,f_auto/${imagePath}`;
+  };
+
   return (
-    <div className="p-4 bg-white shadow-md flex flex-col items-center rounded-lg">
+    <div className="p-4 bg-white shadow-md flex flex-col items-center rounded-lg relative">
+      {/* Delete button */}
+      <button
+        onClick={() => onDeleteItem(item.id)}
+        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+      >
+        <XIcon className="w-6 h-6" />
+      </button>
+
       <img
         src={
           imageError
-            ? "https://via.placeholder.com/150" // URL of the default placeholder image
-            : `${serverURL}/public/${item.imageUrl}`
+            ? "/images/noImage.png" // URL of the default placeholder image
+            : `${getCompressedImageUrl(item.imageUrl)}`
         }
         alt={item.name}
         onError={handleImageError} // Trigger the handleImageError function on image error
