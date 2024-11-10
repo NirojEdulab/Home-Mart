@@ -39,7 +39,9 @@ function AddItems({ addedItems, setAddedItems }) {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const response = await axios.get(`${serverURL}/api/products`);
+        const response = await axios.get(`${serverURL}/api/products`, {
+          withCredentials: true,
+        });
         setItems(response.data.data);
       } catch (error) {
         console.error("Error fetching products:", error);

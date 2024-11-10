@@ -111,6 +111,8 @@ const CreateItem = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+        }, {
+          withCredentials: true,
         }
       );
       if (response.data.status === 201) {
