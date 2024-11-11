@@ -22,20 +22,14 @@ const CreateItem = () => {
   const [formData, setFormData] = useState({
     name: "",
     measureUnit: "",
-    category: "",
+    category: null,
     file: null,
     customCategory: "",
   });
 
   const [loading, setLoading] = useState(false);
 
-  const categories = [
-    "Grocery",
-    "Bathroom",
-    "Kitchen",
-    "Cleaning Supplies",
-    "Other",
-  ];
+  const categories = ["Grocery", "Bathroom", "Other"];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -126,7 +120,7 @@ const CreateItem = () => {
         setFormData({
           name: "",
           measureUnit: "",
-          category: "",
+          category: null,
           file: null,
           customCategory: "",
         });
@@ -202,12 +196,19 @@ const CreateItem = () => {
           >
             Category <span className="text-red-500">*</span>
           </Label>
-          <Select onValueChange={handleSelectChange} disabled={loading}>
+          <Select
+            value={formData.category}
+            onValueChange={handleSelectChange}
+            disabled={loading}
+          >
             <SelectTrigger className="w-full border border-gray-300 rounded-md p-3 focus:border-blue-500 focus:ring-blue-500">
-              <SelectValue placeholder="Select category" />
+              <SelectValue placeholder="Select Category" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
+                <SelectItem value={null} disabled>
+                  Select Category
+                </SelectItem>
                 {categories.map((category) => (
                   <SelectItem key={category} value={category}>
                     {category}
