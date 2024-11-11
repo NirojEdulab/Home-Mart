@@ -35,7 +35,7 @@ function ItemCard({ item, onAddItem, onDeleteItem, srNo }) {
       <div className="flex flex-col items-center text-center">
         <h3 className="text-md font-semibold">{item.name}</h3>
         <span className="text-sm font-medium text-orange-600 bg-gray-200 rounded-full px-2 py-1">
-          {item.category}
+        {item.measureUnit}
         </span>
       </div>
 
