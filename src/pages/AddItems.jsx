@@ -121,7 +121,7 @@ function AddItems({ addedItems, setAddedItems }) {
 
   return (
     <div className="flex w-full min-h-screen">
-      <main className="w-full p-6 bg-gray-300">
+      <main className="w-full p-2 bg-gray-300">
         <div className="flex justify-between items-center gap-4 bg-green-300 p-4">
           <Link to={"/"}>
             <House size={36} />
@@ -148,7 +148,7 @@ function AddItems({ addedItems, setAddedItems }) {
             <div className="animate-spin w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full"></div>
           </div>
         ) : (
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 mt-6">
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 mt-6 px-4">
             {items.length > 0 ? (
               items.map((item) => (
                 <div
