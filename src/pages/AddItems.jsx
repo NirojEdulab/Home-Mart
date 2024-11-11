@@ -16,10 +16,9 @@ function AddItems({ addedItems, setAddedItems }) {
   const [animateItemId, setAnimateItemId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Fetch all items initially
   useEffect(() => {
     const fetchItems = async () => {
-      setLoading(true); // Set loading state before fetching
+      setLoading(true);
       try {
         const response = await axios.get(`${serverURL}/api/products`, {
           withCredentials: true,
@@ -31,16 +30,13 @@ function AddItems({ addedItems, setAddedItems }) {
         setLoading(false);
       }
     };
-
     fetchItems();
   }, []);
 
-  // Fetch filtered items based on the search term
   useEffect(() => {
     const fetchSearchedItems = async () => {
       if (!searchTerm) {
         setLoading(true);
-        // If searchTerm is cleared, fetch all items again
         try {
           const response = await axios.get(`${serverURL}/api/products`, {
             withCredentials: true,
@@ -54,7 +50,7 @@ function AddItems({ addedItems, setAddedItems }) {
         }
       }
 
-      setLoading(true); // Set loading state when searching
+      setLoading(true);
       try {
         const response = await axios.get(`${serverURL}/api/searchProducts`, {
           params: { search: searchTerm },
@@ -64,10 +60,9 @@ function AddItems({ addedItems, setAddedItems }) {
       } catch (error) {
         console.error("Error fetching searched products:", error);
       } finally {
-        setLoading(false); // Reset loading state after fetching
+        setLoading(false);
       }
     };
-
     fetchSearchedItems();
   }, [searchTerm]);
 
@@ -92,74 +87,85 @@ function AddItems({ addedItems, setAddedItems }) {
   const deleteProduct = async (id) => {
     setLoading(true);
     try {
-      const response = await axios.delete(`${serverURL}/api/product/${id}`, { withCredentials: true });
+      const response = await axios.delete(`${serverURL}/api/product/${id}`, {
+        withCredentials: true,
+      });
       if (response.data.status === 200) {
         toast.success(response.data.message);
-        setLoading(false);
-        // Update the state without making another API call
-        setItems((prevItems) => prevItems.filter(item => item.id !== id));
+        setItems((prevItems) => prevItems.filter((item) => item.id !== id));
       }
     } catch (error) {
       console.error("Error deleting product:", error);
-      setLoading(false);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex w-full min-h-screen">
-      <main className="w-full p-2 bg-gray-300">
-        <div className="flex justify-between items-center gap-4 bg-green-300 p-4">
-          <Link to={"/"}>
-            <House size={36} />
-          </Link>
-          <input
-            type="text"
-            placeholder="Search for items..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="border rounded px-3 py-2 w-full"
-          />
-          <Link to={"/cart"}>
-            <div className="relative">
-              <ShoppingCart size={40} className="text-black" />
-              <span className="absolute -top-1 -right-1 w-7 h-7 bg-red-500 text-white text-sm rounded-full flex items-center justify-center">
-                {addedItems.reduce((total, item) => total + item.quantity, 0)}
-              </span>
+    <div className="w-full min-h-screen bg-gray-300">
+      <main className="w-full">
+        {/* Sticky Header */}
+        <div className="sticky top-0 z-10 bg-green-600">
+          <div className="flex justify-between items-center gap-4 p-4">
+            <Link to={"/"}>
+              <House size={32} />
+            </Link>
+            <input
+              type="text"
+              placeholder="Search for items..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="border rounded-md p-2 w-full text-sm"
+            />
+            <Link to={"/cart"}>
+              <div className="relative">
+                <ShoppingCart size={36} className="text-black" />
+                <span className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                  {addedItems.reduce((total, item) => total + item.quantity, 0)}
+                </span>
+              </div>
+            </Link>
+          </div>
+          {items.length > 0 && (
+            <div className="bg-green-500 text-center py-2">
+              <p className="text-white">Total Items: {items.length}</p>
             </div>
-          </Link>
+          )}
         </div>
 
+        {/* Scrollable Item List */}
         {loading ? (
-          <div className="flex justify-center items-center w-full mt-32">
-            <div className="animate-spin w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full"></div>
+          <div className="flex justify-center items-center w-full mt-16">
+            <div className="animate-spin w-12 h-12 border-t-4 border-blue-500 border-solid rounded-full"></div>
           </div>
         ) : (
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 mt-6 px-4">
-            {items.length > 0 ? (
-              items.map((item) => (
-                <div
-                  key={item.id}
-                  className={`${
-                    animateItemId === item.id ? "animate-fly-to-cart" : ""
-                  }`}
-                >
-                  <ItemCard
-                    item={item}
-                    onAddItem={handleAddItem}
-                    onDeleteItem={deleteProduct}
-                  />
+          <div className="p-2">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 h-[80vh] py-4 overflow-y-auto">
+              {items.length > 0 ? (
+                items.map((item, index) => (
+                  <div
+                    key={item.id}
+                    className={`${
+                      animateItemId === item.id ? "animate-fly-to-cart" : ""
+                    }`}
+                  >
+                    <ItemCard
+                      item={item}
+                      onAddItem={handleAddItem}
+                      onDeleteItem={deleteProduct}
+                      srNo={index + 1}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-full text-center">
+                  <h2 className="text-lg font-semibold">No Items Found</h2>
                 </div>
-              ))
-            ) : (
-              <div className="col-span-full text-center">
-                <h2 className="text-xl font-semibold">No Items Found</h2>
-              </div>
-            )}
+              )}
+            </div>
             {items.length > 0 && (
               <Link to="/cart" className="col-span-full mt-4">
-                <Button className="w-full">Go to cart</Button>
+                <Button className="w-full text-sm">Go to cart</Button>
               </Link>
             )}
           </div>

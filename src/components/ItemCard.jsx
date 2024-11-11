@@ -1,64 +1,50 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
-import { PlusIcon, MinusIcon, XIcon } from "lucide-react";  // Added XIcon for delete button
+import { PlusIcon, MinusIcon, Trash2, CirclePlus } from "lucide-react";
 
-function ItemCard({ item, onAddItem, onDeleteItem }) {
+function ItemCard({ item, onAddItem, onDeleteItem, srNo }) {
   const [quantity, setQuantity] = useState(1);
-  const [imageError, setImageError] = useState(false);
 
-  // Handle increase/decrease of quantity by fractional values (e.g. 0.1)
   const handleIncreaseQuantity = () => {
-    setQuantity((prev) => parseFloat((prev + 0.1).toFixed(2))); // Increase by 0.1
+    setQuantity((prev) => parseFloat((prev + 0.1).toFixed(2)));
   };
 
   const handleDecreaseQuantity = () => {
-    setQuantity((prev) => parseFloat((Math.max(0.1, prev - 0.1)).toFixed(2))); // Decrease by 0.1 but never go below 0.1
+    setQuantity((prev) => parseFloat((Math.max(0.1, prev - 0.1)).toFixed(2)));
   };
 
   const handleAddClick = () => {
     onAddItem(item, quantity);
   };
 
-  const handleImageError = () => {
-    setImageError(true); // Set the imageError state to true if the image fails to load
-  };
-
-  const getCompressedImageUrl = (imageUrl) => {
-    const baseUrl = imageUrl?.split("upload/")[0];
-    const imagePath = imageUrl?.split("upload/")[1];
-    return `${baseUrl}upload/w_500,f_auto/${imagePath}`;
-  };
-
   return (
-    <div className="p-4 bg-white shadow-md flex flex-col items-center rounded-lg relative">
+    <div className="p-3 bg-gray-100 shadow rounded-lg flex flex-col gap-2 relative">
       {/* Delete button */}
       <button
         onClick={() => onDeleteItem(item.id)}
-        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+        className="absolute top-1 right-1 text-red-600 hover:text-red-800"
       >
-        <XIcon className="w-6 h-6" />
+        <Trash2 className="w-6 h-6" />
       </button>
 
-      {/* Image and Category Tag */}
-      <div className="w-full flex flex-col items-center mb-2">
-        <img
-          src={imageError ? "/images/noImage.png" : getCompressedImageUrl(item.imageUrl)}
-          alt={item.name}
-          onError={handleImageError} // Trigger the handleImageError function on image error
-          className="w-full h-32 object-cover rounded-md mb-2"
-        />
-        {/* Category Tag */}
-        <span className="text-sm font-medium text-orange-600 bg-gray-100 px-2 py-1 rounded-full">{item.category}</span>
+      <span className="absolute top-1 left-1 text-sm font-medium text-orange-600 bg-gray-200 rounded-full p-1">
+        {srNo}
+      </span>
+
+      {/* Item details */}
+      <div className="flex flex-col items-center text-center">
+        <h3 className="text-md font-semibold">{item.name}</h3>
+        <span className="text-sm font-medium text-orange-600 bg-gray-200 rounded-full px-2 py-1">
+          {item.category}
+        </span>
       </div>
 
-      <h3 className="text-lg font-semibold text-center">{item.name} ({item.measureUnit})</h3>
-
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between mt-4 w-full">
-        {/* Quantity controls */}
-        <div className="flex items-center space-x-2">
+      {/* Quantity controls and Add button */}
+      <div className="flex items-center justify-between gap-2 mt-2">
+        <div className="flex items-center space-x-1">
           <button
             onClick={handleDecreaseQuantity}
-            className="p-1 bg-gray-200 rounded-md hover:bg-gray-300"
+            className="p-1 bg-gray-200 rounded hover:bg-gray-300"
           >
             <MinusIcon className="w-4 h-4" />
           </button>
@@ -67,23 +53,21 @@ function ItemCard({ item, onAddItem, onDeleteItem }) {
             step="0.1"
             value={quantity}
             onChange={(e) => setQuantity(parseFloat(e.target.value))}
-            className="text-black font-semibold w-20 text-center border border-gray-300 rounded-md p-2"
+            className="text-center w-14 border border-gray-300 rounded-md p-1"
           />
-          
           <button
             onClick={handleIncreaseQuantity}
-            className="p-1 bg-gray-200 rounded-md hover:bg-gray-300"
+            className="p-1 bg-gray-200 rounded hover:bg-gray-300"
           >
             <PlusIcon className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Add to Cart button */}
         <button
           onClick={handleAddClick}
-          className="bg-blue-500 text-white px-4 py-2 hover:bg-blue-600 rounded-md"
+          className="bg-blue-500 text-white p-1 rounded hover:bg-blue-600"
         >
-          Add
+          <CirclePlus />
         </button>
       </div>
     </div>
