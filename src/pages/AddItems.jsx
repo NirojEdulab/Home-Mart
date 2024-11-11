@@ -90,30 +90,18 @@ function AddItems({ addedItems, setAddedItems }) {
   };
 
   const deleteProduct = async (id) => {
-    console.log("deleteProduct ==>> ", id);
     setLoading(true);
     try {
-      const response = await axios.delete(`${serverURL}/api/product/${id}`, {
-        withCredentials: true,
-      });
-      console.log(response)
-      if(response.data.status === 200){
+      const response = await axios.delete(`${serverURL}/api/product/${id}`, { withCredentials: true });
+      if (response.data.status === 200) {
         toast.success(response.data.message);
-        try {
-          const response = await axios.get(`${serverURL}/api/products`, {
-            withCredentials: true,
-          });
-          setItems(response.data.data);
-          setLoading(false);
-          return;
-        } catch (error) {
-          console.error("Error fetching searched products:", error);
-        } finally {
-          setLoading(false);
-        }
+        setLoading(false);
+        // Update the state without making another API call
+        setItems((prevItems) => prevItems.filter(item => item.id !== id));
       }
     } catch (error) {
-      console.error("Error fetching searched products:", error);
+      console.error("Error deleting product:", error);
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -135,8 +123,8 @@ function AddItems({ addedItems, setAddedItems }) {
           />
           <Link to={"/cart"}>
             <div className="relative">
-              <ShoppingCart size={36} className="text-black" />
-              <span className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 text-white text-lg rounded-full flex items-center justify-center">
+              <ShoppingCart size={40} className="text-black" />
+              <span className="absolute -top-1 -right-1 w-7 h-7 bg-red-500 text-white text-sm rounded-full flex items-center justify-center">
                 {addedItems.reduce((total, item) => total + item.quantity, 0)}
               </span>
             </div>

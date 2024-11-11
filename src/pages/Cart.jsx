@@ -94,6 +94,8 @@ function Cart({ addedItems, setAddedItems }) {
     doc.line(margin, yPosition, pageWidth - margin, yPosition); // Draw horizontal line
     yPosition += 10; // Move the position after the separator
   
+    doc.text("Total:", 120, yPosition); // Add total label
+
     // Save the PDF
     doc.save(`groceries_list_${format(new Date(date), "dMMMyyyy")}.pdf`);
   };
@@ -167,6 +169,7 @@ function Cart({ addedItems, setAddedItems }) {
                   alt={item.name}
                   onError={() => handleImageError(item.id)} // Trigger the error handler
                   className="w-full h-16 object-cover rounded-md mr-4"
+                  loading="lazy"
                 />
                 <div>
                   <h3 className="text-lg font-semibold">{item.name}</h3>
@@ -202,9 +205,14 @@ function Cart({ addedItems, setAddedItems }) {
           ))}
         </div>
       ) : (
-        <div className="text-center text-xl text-gray-600 mt-8 p-2 border-2 rounded-md">
-          <h3>Your cart is empty</h3>
-        </div>
+        addedItems.length === 0 && (
+          <div className="text-center text-xl text-gray-600 mt-8 p-2 border-2 rounded-md">
+            <h3>Your cart is empty</h3>
+            <Link to="/add-items" className="text-blue-500 font-semibold mt-4">
+              Go back and add some items
+            </Link>
+          </div>
+        )
       )}
 
       {/* Checkout Button */}

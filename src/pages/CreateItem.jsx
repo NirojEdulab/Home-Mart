@@ -274,6 +274,7 @@ const CreateItem = () => {
                   src={URL.createObjectURL(formData.file)}
                   alt="Selected file"
                   className="w-full h-full object-cover rounded-lg"
+                  loading="lazy"
                 />
                 <button
                   type="button"

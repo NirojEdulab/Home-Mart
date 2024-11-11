@@ -6,12 +6,13 @@ function ItemCard({ item, onAddItem, onDeleteItem }) {
   const [quantity, setQuantity] = useState(1);
   const [imageError, setImageError] = useState(false);
 
+  // Handle increase/decrease of quantity by fractional values (e.g. 0.1)
   const handleIncreaseQuantity = () => {
-    setQuantity((prev) => prev + 1);
+    setQuantity((prev) => parseFloat((prev + 0.1).toFixed(2))); // Increase by 0.1
   };
 
   const handleDecreaseQuantity = () => {
-    setQuantity((prev) => Math.max(1, prev - 1));
+    setQuantity((prev) => parseFloat((Math.max(0.1, prev - 0.1)).toFixed(2))); // Decrease by 0.1 but never go below 0.1
   };
 
   const handleAddClick = () => {
@@ -38,17 +39,19 @@ function ItemCard({ item, onAddItem, onDeleteItem }) {
         <XIcon className="w-6 h-6" />
       </button>
 
-      <img
-        src={
-          imageError
-            ? "/images/noImage.png" // URL of the default placeholder image
-            : `${getCompressedImageUrl(item.imageUrl)}`
-        }
-        alt={item.name}
-        onError={handleImageError} // Trigger the handleImageError function on image error
-        className="w-full h-32 object-cover rounded-md mb-2"
-      />
-      <h3 className="text-lg font-semibold text-center">{item.name}</h3>
+      {/* Image and Category Tag */}
+      <div className="w-full flex flex-col items-center mb-2">
+        <img
+          src={imageError ? "/images/noImage.png" : getCompressedImageUrl(item.imageUrl)}
+          alt={item.name}
+          onError={handleImageError} // Trigger the handleImageError function on image error
+          className="w-full h-32 object-cover rounded-md mb-2"
+        />
+        {/* Category Tag */}
+        <span className="text-sm font-medium text-orange-600 bg-gray-100 px-2 py-1 rounded-full">{item.category}</span>
+      </div>
+
+      <h3 className="text-lg font-semibold text-center">{item.name} ({item.measureUnit})</h3>
 
       <div className="flex flex-col md:flex-row gap-4 items-center justify-between mt-4 w-full">
         {/* Quantity controls */}
@@ -59,7 +62,14 @@ function ItemCard({ item, onAddItem, onDeleteItem }) {
           >
             <MinusIcon className="w-4 h-4" />
           </button>
-          <span className="text-black font-semibold">{quantity} {item.measureUnit}</span>
+          <input
+            type="number"
+            step="0.1"
+            value={quantity}
+            onChange={(e) => setQuantity(parseFloat(e.target.value))}
+            className="text-black font-semibold w-20 text-center border border-gray-300 rounded-md p-2"
+          />
+          
           <button
             onClick={handleIncreaseQuantity}
             className="p-1 bg-gray-200 rounded-md hover:bg-gray-300"
